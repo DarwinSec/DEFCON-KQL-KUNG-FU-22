@@ -1,0 +1,56 @@
+# Challenge: Hello KQL
+# The very first challenge - introduction to basic querying
+
+id: hello-kql
+title: "Hello, KQL"
+belt: white
+points: 50
+category: misc
+
+scenario: |
+  Welcome to the KQL Kung Fu dojo, young grasshopper!
+
+  Before you can find needles in haystacks, you must first learn to see the hay.
+  Your Azure environment has been logging security events, and somewhere in those
+  logs, we've hidden your first flag.
+
+  The flag is hidden in a SecurityEvent record where the Activity field contains
+  something special. Can you find it?
+
+objective: "Query the SecurityEvent table and find the record containing the flag."
+
+tables:
+  - SecurityEvent
+
+flag:
+  value: "FLAG{kql_kung_fu_first_steps}"
+  format: exact
+  location: "Hidden in Activity field of a specific SecurityEvent record"
+
+hints:
+  - cost: 10
+    text: "Start by just typing the table name: SecurityEvent"
+  - cost: 15
+    text: "Use the 'where' operator to filter. Try: where Activity contains \"FLAG\""
+  - cost: 25
+    text: "The full query is: SecurityEvent | where Activity contains \"FLAG\""
+
+solution:
+  query: |
+    SecurityEvent
+    | where Activity contains "FLAG"
+  explanation: |
+    This challenge introduces the most basic KQL pattern:
+    1. Start with a table name (SecurityEvent)
+    2. Use the pipe (|) to chain operators
+    3. Use 'where' to filter rows based on conditions
+    4. Use 'contains' for case-insensitive substring matching
+
+learning_objectives:
+  - "Understanding table-based queries"
+  - "Using the pipe operator to chain commands"
+  - "Basic filtering with 'where'"
+  - "String matching with 'contains'"
+
+author: "KQL Kung Fu Team"
+version: "1.0"

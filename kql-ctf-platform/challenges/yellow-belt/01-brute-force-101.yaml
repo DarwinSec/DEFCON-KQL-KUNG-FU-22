@@ -1,0 +1,77 @@
+# Challenge: Brute Force 101
+# Learn to identify brute force attacks using summarize
+
+id: brute-force-101
+title: "The Persistent Attacker"
+belt: yellow
+points: 150
+category: identity
+
+scenario: |
+  Your SOC received an alert about potential brute force activity. Someone (or something)
+  is hammering away at your Azure AD, trying to guess passwords.
+
+  Analyze the SigninLogs to find the user account that received the MOST failed
+  sign-in attempts. The attacker left a calling card in the UserAgent string of
+  their attempts - that's your flag!
+
+objective: "Find the most targeted account and extract the flag from the attacker's UserAgent."
+
+tables:
+  - SigninLogs
+
+flag:
+  value: "FLAG{kql_kung_fu_brut3_f0rc3_d3t3ct3d}"
+  format: exact
+  location: "UserAgent field of the failed sign-in attempts for the most targeted account"
+
+hints:
+  - cost: 25
+    text: "Failed sign-ins have ResultType != 0. Use summarize with count() to aggregate."
+  - cost: 35
+    text: |
+      Group by UserPrincipalName:
+      SigninLogs | where ResultType != 0 | summarize count() by UserPrincipalName
+  - cost: 50
+    text: |
+      After finding the most targeted user, query their failed sign-ins and look at UserAgent:
+      SigninLogs
+      | where ResultType != 0
+      | where UserPrincipalName == "<most_targeted_user>"
+      | distinct UserAgent
+
+solution:
+  query: |
+    // Step 1: Find most targeted account
+    SigninLogs
+    | where ResultType != 0
+    | summarize Attempts = count() by UserPrincipalName
+    | order by Attempts desc
+    | limit 1
+
+    // Step 2: Get the flag from UserAgent
+    SigninLogs
+    | where ResultType != 0
+    | where UserPrincipalName == "admin@yourcompany.com"  // Replace with result from step 1
+    | where UserAgent contains "FLAG"
+    | distinct UserAgent
+  explanation: |
+    This challenge teaches the critical 'summarize' operator:
+    - summarize creates aggregations like count(), sum(), avg()
+    - 'by' clause groups the aggregation
+
+    Real-world application: This exact pattern is used to detect brute force attacks
+    in production SOC environments. Thresholds vary, but 10+ failures in an hour
+    from a single source is often suspicious.
+
+learning_objectives:
+  - "Using 'summarize' for aggregation"
+  - "Grouping with the 'by' clause"
+  - "Identifying brute force attack patterns"
+  - "Multi-step investigation queries"
+
+mitre_attack:
+  - T1110.001  # Brute Force: Password Guessing
+
+author: "KQL Kung Fu Team"
+version: "1.0"

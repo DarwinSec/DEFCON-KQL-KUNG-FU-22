@@ -1,0 +1,54 @@
+# Challenge: Counting 101
+# Learn to count and aggregate results
+
+id: counting-101
+title: "Counting 101"
+belt: white
+points: 50
+category: identity
+
+scenario: |
+  Your security team needs a quick health check on the Azure AD environment.
+
+  The SigninLogs table contains authentication attempts. Your mission is simple:
+  count the total number of sign-in events in the dataset.
+
+  But here's the twist - the flag is the count itself! Format your answer as:
+  FLAG{kql_kung_fu_COUNT} where COUNT is the exact number you find.
+
+objective: "Count all records in the SigninLogs table and submit the count as the flag."
+
+tables:
+  - SigninLogs
+
+flag:
+  value: "FLAG{kql_kung_fu_1337}"
+  format: exact
+  location: "The count of all SigninLogs records"
+
+hints:
+  - cost: 10
+    text: "KQL has a 'count' operator that returns the number of rows"
+  - cost: 15
+    text: "Try: SigninLogs | count"
+  - cost: 20
+    text: "The result will be a single number - format it as FLAG{kql_kung_fu_NUMBER}"
+
+solution:
+  query: |
+    SigninLogs
+    | count
+  explanation: |
+    The 'count' operator returns the total number of records in the result set.
+    This is one of the simplest aggregation operations in KQL.
+
+    Alternative using summarize:
+    SigninLogs | summarize count()
+
+learning_objectives:
+  - "Using the 'count' operator"
+  - "Understanding record counts"
+  - "Introduction to aggregation concepts"
+
+author: "KQL Kung Fu Team"
+version: "1.0"

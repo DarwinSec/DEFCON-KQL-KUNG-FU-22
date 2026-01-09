@@ -1,0 +1,65 @@
+# Challenge: Time Traveler
+# Learn time-based filtering with ago() and datetime functions
+
+id: time-traveler
+title: "The Time Traveler"
+belt: yellow
+points: 150
+category: identity
+
+scenario: |
+  Something strange happened exactly at midnight last week. A sign-in occurred
+  at an unusual hour that your security team flagged as suspicious.
+
+  Find all sign-ins that occurred between midnight (00:00) and 4:00 AM across
+  all days in the logs. Among these late-night authentications, one has a
+  suspicious AppDisplayName that contains your flag.
+
+objective: "Filter for late-night sign-ins (00:00-04:00) and find the flag in AppDisplayName."
+
+tables:
+  - SigninLogs
+
+flag:
+  value: "FLAG{kql_kung_fu_midnight_hacker}"
+  format: exact
+  location: "AppDisplayName of a late-night sign-in event"
+
+hints:
+  - cost: 25
+    text: "Use hourofday() to extract the hour from TimeGenerated"
+  - cost: 35
+    text: "Filter for hours 0-3: where hourofday(TimeGenerated) between (0 .. 3)"
+  - cost: 50
+    text: |
+      SigninLogs
+      | where hourofday(TimeGenerated) >= 0 and hourofday(TimeGenerated) < 4
+      | where AppDisplayName contains "FLAG"
+
+solution:
+  query: |
+    SigninLogs
+    | where hourofday(TimeGenerated) >= 0 and hourofday(TimeGenerated) < 4
+    | where AppDisplayName contains "FLAG"
+    | project TimeGenerated, UserPrincipalName, AppDisplayName
+  explanation: |
+    KQL has powerful datetime functions:
+    - ago(1h), ago(1d), ago(7d): Relative time
+    - hourofday(), dayofweek(), dayofmonth(): Extract components
+    - between (start .. end): Range filtering
+    - startofday(), endofday(): Day boundaries
+    - datetime_diff(): Calculate time differences
+
+    Security relevance: Unusual login times are a common indicator of compromise,
+    especially for accounts that typically work 9-5.
+
+learning_objectives:
+  - "Using datetime functions (hourofday, ago)"
+  - "Time-based filtering"
+  - "Detecting anomalous timing patterns"
+
+mitre_attack:
+  - T1078  # Valid Accounts
+
+author: "KQL Kung Fu Team"
+version: "1.0"

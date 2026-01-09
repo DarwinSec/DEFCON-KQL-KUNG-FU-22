@@ -1,0 +1,79 @@
+# Challenge: String Theory
+# Master string operators for pattern matching
+
+id: string-theory
+title: "String Theory"
+belt: yellow
+points: 175
+category: security-alerts
+
+scenario: |
+  Security alerts are flooding in, and you need to triage them efficiently.
+  Your task is to find all alerts related to "credential" threats.
+
+  But the data is messy - some alerts say "Credential", others say "CREDENTIAL",
+  and some say "credential access". You need to catch them all!
+
+  Among the credential-related alerts, one has an unusual AlertName that IS your flag.
+
+objective: "Find all credential-related alerts using case-insensitive matching and locate the flag."
+
+tables:
+  - SecurityAlert
+
+flag:
+  value: "FLAG{kql_kung_fu_str1ng_n1nja}"
+  format: exact
+  location: "AlertName of a credential-related security alert"
+
+hints:
+  - cost: 25
+    text: "Use 'contains' for case-insensitive substring matching (not 'contains_cs')"
+  - cost: 35
+    text: |
+      String operators:
+      - contains (case-insensitive) vs contains_cs (case-sensitive)
+      - startswith, endswith
+      - has (word boundary matching)
+  - cost: 50
+    text: |
+      SecurityAlert
+      | where AlertName contains "credential" or Description contains "credential"
+      | where AlertName contains "FLAG"
+
+solution:
+  query: |
+    SecurityAlert
+    | where AlertName contains "credential"
+         or Description contains "credential"
+         or Tactics contains "CredentialAccess"
+    | where AlertName contains "FLAG"
+    | distinct AlertName
+  explanation: |
+    String operators comparison:
+    | Operator | Case-Sensitive | Match Type |
+    |----------|----------------|------------|
+    | == | No (use =~) | Exact |
+    | contains | No | Substring |
+    | contains_cs | Yes | Substring |
+    | has | No | Word boundary |
+    | has_cs | Yes | Word boundary |
+    | startswith | No | Prefix |
+    | endswith | No | Suffix |
+    | matches regex | Depends | Pattern |
+
+    'has' is more performant than 'contains' when searching for whole words
+    because it can use indexes.
+
+learning_objectives:
+  - "Case-sensitive vs case-insensitive operators"
+  - "Understanding 'contains' vs 'has'"
+  - "Combining multiple string conditions"
+  - "Alert triage patterns"
+
+mitre_attack:
+  - T1110  # Brute Force
+  - TA0006  # Credential Access (Tactic)
+
+author: "KQL Kung Fu Team"
+version: "1.0"

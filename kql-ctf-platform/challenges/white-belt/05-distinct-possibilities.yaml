@@ -1,0 +1,54 @@
+# Challenge: Distinct Possibilities
+# Learn to find unique values
+
+id: distinct-possibilities
+title: "Distinct Possibilities"
+belt: white
+points: 100
+category: identity
+
+scenario: |
+  The identity team wants to know how many unique users have attempted to sign in
+  to your Azure AD tenant this month.
+
+  Find all distinct UserPrincipalName values in the SigninLogs. Among them,
+  you'll find one that doesn't belong - it's the flag disguised as a username!
+
+objective: "List all distinct users and find the one that's actually a flag."
+
+tables:
+  - SigninLogs
+
+flag:
+  value: "FLAG{kql_kung_fu_unique_find}"
+  format: exact
+  location: "A distinct UserPrincipalName that is formatted as a flag"
+
+hints:
+  - cost: 20
+    text: "The 'distinct' operator returns unique values from a column"
+  - cost: 25
+    text: "Try: SigninLogs | distinct UserPrincipalName"
+  - cost: 35
+    text: "Pipe your distinct results through a where filter looking for 'FLAG'"
+
+solution:
+  query: |
+    SigninLogs
+    | distinct UserPrincipalName
+    | where UserPrincipalName contains "FLAG"
+  explanation: |
+    The 'distinct' operator returns unique values, removing duplicates.
+
+    Useful variations:
+    - distinct Column1: Unique values of one column
+    - distinct Column1, Column2: Unique combinations
+    - summarize dcount(Column1): Count of distinct values
+
+learning_objectives:
+  - "Using 'distinct' for unique values"
+  - "Understanding deduplication"
+  - "Chaining distinct with other operators"
+
+author: "KQL Kung Fu Team"
+version: "1.0"

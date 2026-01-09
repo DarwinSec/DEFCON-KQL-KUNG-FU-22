@@ -1,0 +1,65 @@
+# Challenge: Project Basics
+# Learn to select specific columns
+
+id: project-basics
+title: "The Art of Projection"
+belt: white
+points: 75
+category: identity
+
+scenario: |
+  A security analyst needs to review recent sign-ins, but they're overwhelmed
+  by all the columns in the SigninLogs table.
+
+  Help them out by creating a clean view showing only:
+  - TimeGenerated
+  - UserPrincipalName
+  - ResultType
+  - IPAddress
+
+  In the results, you'll find a suspicious user whose name IS the flag.
+  Look for the user with the most unusual UserPrincipalName!
+
+objective: "Project specific columns and identify the suspicious username that is the flag."
+
+tables:
+  - SigninLogs
+
+flag:
+  value: "FLAG{kql_kung_fu_proj3ct_m4st3r}"
+  format: case-insensitive
+  location: "A UserPrincipalName in the SigninLogs that looks like a flag"
+
+hints:
+  - cost: 15
+    text: "Use 'project' to select specific columns: | project Column1, Column2"
+  - cost: 20
+    text: "After projecting, look through the UserPrincipalName values for something unusual"
+  - cost: 30
+    text: |
+      SigninLogs
+      | project TimeGenerated, UserPrincipalName, ResultType, IPAddress
+      | where UserPrincipalName contains "FLAG"
+
+solution:
+  query: |
+    SigninLogs
+    | project TimeGenerated, UserPrincipalName, ResultType, IPAddress
+    | where UserPrincipalName contains "FLAG"
+  explanation: |
+    The 'project' operator selects which columns to include in the output.
+    This is similar to SELECT in SQL.
+
+    Variants:
+    - project: Select specific columns
+    - project-away: Remove specific columns, keep the rest
+    - project-keep: Keep columns matching a pattern
+    - project-rename: Rename columns
+
+learning_objectives:
+  - "Using 'project' to select columns"
+  - "Combining multiple operators"
+  - "Data reduction for readability"
+
+author: "KQL Kung Fu Team"
+version: "1.0"

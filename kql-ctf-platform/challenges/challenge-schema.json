@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "KQL CTF Challenge",
+  "description": "Schema for KQL Kung Fu CTF challenge definitions",
+  "type": "object",
+  "required": ["id", "title", "belt", "points", "scenario", "tables", "flag"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Unique identifier for the challenge (kebab-case)"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Display title for the challenge"
+    },
+    "belt": {
+      "type": "string",
+      "enum": ["white", "yellow", "orange", "green", "blue", "brown", "black"],
+      "description": "Difficulty level / belt color"
+    },
+    "points": {
+      "type": "integer",
+      "minimum": 50,
+      "maximum": 2000,
+      "description": "Base points awarded for solving"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "identity",
+        "network",
+        "activity-logs",
+        "security-alerts",
+        "resource-graph",
+        "multi-table",
+        "misc"
+      ],
+      "description": "Challenge category"
+    },
+    "scenario": {
+      "type": "string",
+      "description": "The story/context presented to the player"
+    },
+    "objective": {
+      "type": "string",
+      "description": "Clear statement of what the player needs to find"
+    },
+    "tables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "List of table names available for this challenge"
+    },
+    "flag": {
+      "type": "object",
+      "required": ["value", "format"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "The actual flag value"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["exact", "regex", "case-insensitive"],
+          "default": "exact",
+          "description": "How to validate the submitted flag"
+        },
+        "location": {
+          "type": "string",
+          "description": "Hint about where the flag is hidden (for challenge authors)"
+        }
+      }
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cost", "text"],
+        "properties": {
+          "cost": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Point penalty for using this hint"
+          },
+          "text": {
+            "type": "string",
+            "description": "The hint content"
+          }
+        }
+      },
+      "description": "Progressive hints with point penalties"
+    },
+    "solution": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Reference solution KQL query"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "Explanation of the solution approach"
+        }
+      }
+    },
+    "learning_objectives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "KQL concepts this challenge teaches"
+    },
+    "mitre_attack": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$"
+      },
+      "description": "Related MITRE ATT&CK technique IDs"
+    },
+    "data_file": {
+      "type": "string",
+      "description": "Path to the data file for this challenge"
+    },
+    "author": {
+      "type": "string",
+      "description": "Challenge author"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Challenge version"
+    }
+  }
+}

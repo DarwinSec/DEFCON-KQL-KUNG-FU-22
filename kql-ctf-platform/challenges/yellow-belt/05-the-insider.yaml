@@ -1,0 +1,81 @@
+# Challenge: The Insider
+# Use 'in' operator and multiple conditions
+
+id: the-insider
+title: "The Insider Threat"
+belt: yellow
+points: 200
+category: activity-logs
+
+scenario: |
+  HR flagged three employees for suspicious behavior:
+  - john.smith@yourcompany.com
+  - sarah.jones@yourcompany.com
+  - mike.wilson@yourcompany.com
+
+  Your task is to audit their Azure activity. Check the AzureActivity logs
+  for any actions performed by these three users.
+
+  One of them performed an unusual operation - and the OperationName contains your flag!
+
+objective: "Filter for activities by the three flagged users and find the suspicious operation."
+
+tables:
+  - AzureActivity
+
+flag:
+  value: "FLAG{kql_kung_fu_1ns1d3r_f0und}"
+  format: exact
+  location: "OperationName of suspicious activity by one of the three users"
+
+hints:
+  - cost: 30
+    text: "Use the 'in' operator to match multiple values: where Caller in ('value1', 'value2')"
+  - cost: 40
+    text: |
+      let suspectUsers = dynamic(["john.smith@yourcompany.com", "sarah.jones@yourcompany.com", "mike.wilson@yourcompany.com"]);
+      AzureActivity | where Caller in (suspectUsers)
+  - cost: 55
+    text: "After filtering to the three users, look for OperationName containing 'FLAG'"
+
+solution:
+  query: |
+    let suspectUsers = dynamic([
+        "john.smith@yourcompany.com",
+        "sarah.jones@yourcompany.com",
+        "mike.wilson@yourcompany.com"
+    ]);
+    AzureActivity
+    | where Caller in (suspectUsers)
+    | where OperationName contains "FLAG"
+    | project TimeGenerated, Caller, OperationName, Resource
+  explanation: |
+    The 'in' operator efficiently checks if a value is in a list:
+    - in: Case-insensitive match against list
+    - in~: Explicit case-insensitive
+    - !in: Not in list
+    - has_any: Any word from a list (for strings)
+
+    Using 'let' to define reusable variables:
+    - Makes queries more readable
+    - Allows complex expressions to be named
+    - Essential for larger queries
+
+    Insider threat indicators:
+    - Accessing resources outside normal scope
+    - Unusual timing patterns
+    - Bulk data access or downloads
+    - Privilege escalation attempts
+
+learning_objectives:
+  - "Using 'in' operator for multiple value matching"
+  - "Introduction to 'let' statements"
+  - "Insider threat investigation patterns"
+  - "Auditing specific user activities"
+
+mitre_attack:
+  - T1078  # Valid Accounts
+  - T1530  # Data from Cloud Storage
+
+author: "KQL Kung Fu Team"
+version: "1.0"

@@ -1,0 +1,62 @@
+# Challenge: Limit Yourself
+# Learn to limit results and sort data
+
+id: limit-yourself
+title: "Know Your Limits"
+belt: white
+points: 75
+category: network
+
+scenario: |
+  The network team captured flow logs but the dataset is HUGE!
+  They need you to find the most recent 10 network flows to verify logging is working.
+
+  But wait - one of those flows has a secret destination IP address that's actually
+  your flag. The flag format is: FLAG{kql_kung_fu_IPADDRESS} where IPADDRESS is
+  the destination IP from the most recent denied inbound flow.
+
+objective: "Find the 10 most recent flows, identify the most recent denied inbound flow's destination IP."
+
+tables:
+  - AzureNetworkAnalytics_CL
+
+flag:
+  value: "FLAG{kql_kung_fu_10.13.37.100}"
+  format: exact
+  location: "DestIP_s of the most recent denied inbound flow"
+
+hints:
+  - cost: 15
+    text: "Use 'order by' (or 'sort by') to sort results, and 'limit' (or 'take') to restrict count"
+  - cost: 20
+    text: "Filter for denied (FlowStatus_s == 'D') and inbound (FlowDirection_s == 'I')"
+  - cost: 30
+    text: |
+      AzureNetworkAnalytics_CL
+      | where FlowStatus_s == "D" and FlowDirection_s == "I"
+      | order by TimeGenerated desc
+      | limit 1
+
+solution:
+  query: |
+    AzureNetworkAnalytics_CL
+    | where FlowStatus_s == "D" and FlowDirection_s == "I"
+    | order by TimeGenerated desc
+    | limit 1
+    | project DestIP_s
+  explanation: |
+    Key operators learned:
+    - 'order by' (alias: 'sort by'): Sort results by a column
+    - 'desc' / 'asc': Sort direction (descending/ascending)
+    - 'limit' (alias: 'take'): Restrict output to N rows
+
+    Always sort before limiting to get meaningful "top N" results!
+
+learning_objectives:
+  - "Sorting with 'order by'"
+  - "Limiting results with 'limit' or 'take'"
+  - "Combining where, order by, and limit"
+  - "Understanding flow log fields"
+
+author: "KQL Kung Fu Team"
+version: "1.0"

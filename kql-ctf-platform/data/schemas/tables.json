@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "KQL CTF Table Schemas",
+  "description": "Schema definitions for log tables used in challenges",
+  "tables": {
+    "SigninLogs": {
+      "description": "Azure AD sign-in logs",
+      "columns": {
+        "TimeGenerated": { "type": "datetime", "description": "Timestamp of the event" },
+        "UserPrincipalName": { "type": "string", "description": "User's email/UPN" },
+        "UserDisplayName": { "type": "string", "description": "User's display name" },
+        "IPAddress": { "type": "string", "description": "Source IP address" },
+        "Location": { "type": "string", "description": "Geographic location" },
+        "LocationDetails": { "type": "dynamic", "description": "Detailed location info (city, state, country)" },
+        "ResultType": { "type": "int", "description": "Sign-in result code (0=success)" },
+        "ResultDescription": { "type": "string", "description": "Human-readable result" },
+        "ClientAppUsed": { "type": "string", "description": "Application used for sign-in" },
+        "UserAgent": { "type": "string", "description": "Browser/client user agent" },
+        "DeviceDetail": { "type": "dynamic", "description": "Device information" },
+        "AppDisplayName": { "type": "string", "description": "Target application name" },
+        "ResourceDisplayName": { "type": "string", "description": "Target resource name" },
+        "ConditionalAccessStatus": { "type": "string", "description": "CA policy result" },
+        "RiskLevelDuringSignIn": { "type": "string", "description": "Risk assessment" },
+        "CorrelationId": { "type": "string", "description": "Request correlation ID" }
+      }
+    },
+    "AzureActivity": {
+      "description": "Azure subscription activity logs",
+      "columns": {
+        "TimeGenerated": { "type": "datetime", "description": "Timestamp of the event" },
+        "OperationName": { "type": "string", "description": "Name of the operation" },
+        "OperationNameValue": { "type": "string", "description": "Operation name value" },
+        "CategoryValue": { "type": "string", "description": "Activity category" },
+        "Caller": { "type": "string", "description": "Identity that performed the action" },
+        "CallerIpAddress": { "type": "string", "description": "Caller's IP address" },
+        "ResourceGroup": { "type": "string", "description": "Target resource group" },
+        "Resource": { "type": "string", "description": "Target resource name" },
+        "ResourceId": { "type": "string", "description": "Full resource ID" },
+        "ResourceProvider": { "type": "string", "description": "Azure resource provider" },
+        "SubscriptionId": { "type": "string", "description": "Azure subscription ID" },
+        "ActivityStatus": { "type": "string", "description": "Operation status" },
+        "ActivityStatusValue": { "type": "string", "description": "Status value" },
+        "Properties": { "type": "dynamic", "description": "Additional properties" },
+        "Authorization": { "type": "dynamic", "description": "Authorization details" },
+        "Level": { "type": "string", "description": "Log level" }
+      }
+    },
+    "SecurityEvent": {
+      "description": "Windows Security Events",
+      "columns": {
+        "TimeGenerated": { "type": "datetime", "description": "Timestamp of the event" },
+        "EventID": { "type": "int", "description": "Windows event ID" },
+        "Activity": { "type": "string", "description": "Event activity description" },
+        "Computer": { "type": "string", "description": "Source computer name" },
+        "Account": { "type": "string", "description": "Account involved" },
+        "AccountType": { "type": "string", "description": "Type of account" },
+        "TargetAccount": { "type": "string", "description": "Target account" },
+        "TargetUserName": { "type": "string", "description": "Target username" },
+        "TargetDomainName": { "type": "string", "description": "Target domain" },
+        "LogonType": { "type": "int", "description": "Windows logon type" },
+        "LogonTypeName": { "type": "string", "description": "Logon type name" },
+        "IpAddress": { "type": "string", "description": "Source IP" },
+        "IpPort": { "type": "string", "description": "Source port" },
+        "WorkstationName": { "type": "string", "description": "Source workstation" },
+        "Process": { "type": "string", "description": "Process name" },
+        "ProcessName": { "type": "string", "description": "Full process path" },
+        "ProcessId": { "type": "string", "description": "Process ID" },
+        "CommandLine": { "type": "string", "description": "Command line arguments" },
+        "SubjectUserName": { "type": "string", "description": "Subject username" },
+        "SubjectDomainName": { "type": "string", "description": "Subject domain" }
+      }
+    },
+    "AzureNetworkAnalytics_CL": {
+      "description": "NSG Flow Logs (custom log)",
+      "columns": {
+        "TimeGenerated": { "type": "datetime", "description": "Timestamp" },
+        "FlowStartTime_t": { "type": "datetime", "description": "Flow start time" },
+        "FlowEndTime_t": { "type": "datetime", "description": "Flow end time" },
+        "SrcIP_s": { "type": "string", "description": "Source IP address" },
+        "DestIP_s": { "type": "string", "description": "Destination IP address" },
+        "SrcPort_d": { "type": "int", "description": "Source port" },
+        "DestPort_d": { "type": "int", "description": "Destination port" },
+        "Protocol_s": { "type": "string", "description": "Protocol (T=TCP, U=UDP)" },
+        "FlowDirection_s": { "type": "string", "description": "I=Inbound, O=Outbound" },
+        "FlowStatus_s": { "type": "string", "description": "A=Allowed, D=Denied" },
+        "NSGName_s": { "type": "string", "description": "NSG name" },
+        "NSGRuleName_s": { "type": "string", "description": "NSG rule that matched" },
+        "InboundBytes_d": { "type": "long", "description": "Bytes received" },
+        "OutboundBytes_d": { "type": "long", "description": "Bytes sent" },
+        "InboundPackets_d": { "type": "long", "description": "Packets received" },
+        "OutboundPackets_d": { "type": "long", "description": "Packets sent" },
+        "Region_s": { "type": "string", "description": "Azure region" },
+        "Subscription_g": { "type": "string", "description": "Subscription GUID" }
+      }
+    },
+    "SecurityAlert": {
+      "description": "Microsoft Defender/Sentinel alerts",
+      "columns": {
+        "TimeGenerated": { "type": "datetime", "description": "Alert generation time" },
+        "AlertName": { "type": "string", "description": "Name of the alert" },
+        "AlertSeverity": { "type": "string", "description": "Alert severity level" },
+        "Description": { "type": "string", "description": "Alert description" },
+        "ProviderName": { "type": "string", "description": "Alert source provider" },
+        "VendorName": { "type": "string", "description": "Vendor name" },
+        "Status": { "type": "string", "description": "Alert status" },
+        "Tactics": { "type": "string", "description": "MITRE ATT&CK tactics" },
+        "Techniques": { "type": "string", "description": "MITRE ATT&CK techniques" },
+        "Entities": { "type": "dynamic", "description": "Related entities" },
+        "ExtendedProperties": { "type": "dynamic", "description": "Additional properties" },
+        "CompromisedEntity": { "type": "string", "description": "Primary compromised entity" },
+        "RemediationSteps": { "type": "string", "description": "Suggested remediation" },
+        "ConfidenceLevel": { "type": "string", "description": "Alert confidence" }
+      }
+    }
+  }
+}

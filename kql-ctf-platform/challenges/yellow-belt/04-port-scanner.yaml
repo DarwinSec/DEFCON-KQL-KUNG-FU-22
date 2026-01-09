@@ -1,0 +1,79 @@
+# Challenge: Port Scanner
+# Detect port scanning using summarize with multiple aggregations
+
+id: port-scanner
+title: "The Port Scanner"
+belt: yellow
+points: 200
+category: network
+
+scenario: |
+  Your network security team detected suspicious traffic patterns in the NSG flow logs.
+  It looks like someone might be scanning your network!
+
+  A port scan typically shows:
+  - One source IP hitting many destination ports
+  - Usually short-lived connections
+  - Often denied by firewall rules
+
+  Find the source IP that attempted to connect to the MOST unique destination ports.
+  The number of unique ports they scanned IS your flag!
+
+  Format: FLAG{kql_kung_fu_PORTNUMBER}
+
+objective: "Identify the source IP with the most destination port diversity and count the ports."
+
+tables:
+  - AzureNetworkAnalytics_CL
+
+flag:
+  value: "FLAG{kql_kung_fu_443}"
+  format: exact
+  location: "The count of distinct destination ports from the scanning IP"
+
+hints:
+  - cost: 30
+    text: "Use dcount() to count distinct values: summarize dcount(DestPort_d) by SrcIP_s"
+  - cost: 40
+    text: "Sort by the distinct count descending to find the top scanner"
+  - cost: 55
+    text: |
+      AzureNetworkAnalytics_CL
+      | summarize UniquePortsScanned = dcount(DestPort_d) by SrcIP_s
+      | order by UniquePortsScanned desc
+      | limit 1
+
+solution:
+  query: |
+    AzureNetworkAnalytics_CL
+    | summarize
+        UniquePortsScanned = dcount(DestPort_d),
+        TotalConnections = count(),
+        DestinationIPs = dcount(DestIP_s)
+      by SrcIP_s
+    | order by UniquePortsScanned desc
+    | limit 5
+  explanation: |
+    Advanced summarize techniques:
+    - dcount(): Distinct count (cardinality)
+    - Multiple aggregations in one summarize
+    - Naming aggregation results with '='
+
+    Port scan detection in practice:
+    - Normal: ~5-10 unique ports per source IP
+    - Suspicious: 50+ unique ports
+    - Definite scan: 100+ unique ports in short time
+
+    This pattern is used in production SIEM rules!
+
+learning_objectives:
+  - "Using dcount() for distinct counts"
+  - "Multiple aggregations in summarize"
+  - "Network threat detection patterns"
+  - "Understanding port scanning indicators"
+
+mitre_attack:
+  - T1046  # Network Service Discovery
+
+author: "KQL Kung Fu Team"
+version: "1.0"

@@ -1,0 +1,8 @@
+# Data generator dependencies
+# The generator uses only standard library modules, but these are useful for extensions
+
+# For future enhancements:
+# faker>=22.0.0        # Generate realistic names, addresses, etc.
+# pandas>=2.0.0        # DataFrame operations for large datasets
+# pyarrow>=14.0.0      # Parquet file support
+# azure-kusto-data     # Direct ADX integration
