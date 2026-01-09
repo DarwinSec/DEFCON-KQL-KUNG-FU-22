@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/* Custom theme colors for KQL Kung Fu */
+:root {
+  --color-belt-white: #f5f5f5;
+  --color-belt-yellow: #fbbf24;
+  --color-belt-orange: #f97316;
+  --color-belt-green: #22c55e;
+  --color-belt-blue: #3b82f6;
+  --color-belt-brown: #92400e;
+  --color-belt-black: #1f2937;
+}
+
+/* Monaco editor container */
+.monaco-container {
+  height: 100%;
+  min-height: 300px;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
